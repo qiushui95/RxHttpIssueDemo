@@ -12,4 +12,9 @@ interface Api {
     @PagingResult
     @GET("article/list/0/json")
     suspend fun getDirectData(): List<IdInfo>
+
+    @ResponseResult
+    @StringResult("pageCount")
+    @GET("article/list/0/json")
+    suspend fun getStringData(): String
 }

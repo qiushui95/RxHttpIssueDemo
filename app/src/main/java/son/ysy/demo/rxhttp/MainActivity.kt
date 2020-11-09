@@ -16,15 +16,19 @@ class MainActivity : AppCompatActivity() {
 
     private val api by lazy {
         Retrofit.Builder()
-                .baseUrl("https://www.wanandroid.com/")
-                .client(OkHttpClient.Builder().build())
-                .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder()
+            .baseUrl("https://www.wanandroid.com/")
+            .client(OkHttpClient.Builder().build())
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder()
                         .add(ResponseResultJsonAdapter.FACTORY)
                         .add(PagingResultJsonAdapter.FACTORY)
-                        .build())
+                        .add(StringJsonAdapter.FACTORY)
+                        .build()
                 )
-                .build()
-                .create(Api::class.java)
+            )
+            .build()
+            .create(Api::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +39,8 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.IO) {
                 val list = api.getPageData()
                 launch(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "获取到${list.datas.size}个数据", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, "获取到${list.datas.size}个数据", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
@@ -44,7 +49,18 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.IO) {
                 val list = api.getDirectData()
                 launch(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "获取到${list.size}个数据", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, "获取到${list.size}个数据", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.btnUseCase3).setOnClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+                val data = api.getStringData()
+                launch(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, data, Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
